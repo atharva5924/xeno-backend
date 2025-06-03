@@ -1,145 +1,125 @@
-# 🧠 Mini CRM Platform – Frontend (Client)
+# 🧠 Mini CRM Platform – Backend (Server)
 
-This is the **frontend React application** for the **Mini CRM Platform** built for the Xeno SDE Internship Assignment – 2025. It enables users to create audience segments, launch personalized marketing campaigns, and gain intelligent insights, all via a clean and dynamic user interface.
-
-## 🌐 Live Demo
-
-> 🔗 [Deployed Frontend Link](https://your-frontend.vercel.app)
-
-## 📽️ Demo Video
-
-> 🔗 [Watch the Demo (YouTube)](https://your-demo-link)
+This is the **backend service** for the Mini CRM Platform built for the **Xeno SDE Internship Assignment – 2025**. It powers REST APIs for data ingestion, segmentation, campaign delivery, and AI integration, optionally using a pub-sub architecture for scalability.
 
 ---
 
-## ✨ Features
+## 🔗 Related Repositories
 
-- 🔐 **Google OAuth2.0 Authentication** (via `@react-oauth/google`)
-- 🧱 **Dynamic Segment Rule Builder** with AND/OR conditions
-- 🔍 **Audience Preview** based on applied filters
-- 📈 **Campaign History** with delivery stats (sent, failed, audience size)
-- 📬 **Trigger Campaigns** with mock vendor API simulation
-- 🧠 **AI-Powered Message Suggestions** for campaign messages
-- 🧩 Drag & Drop UI elements using `react-dnd`
-- 💬 Toast messages, confirmations, and validations via Ant Design
+- 📦 **Frontend Repo:** [Mini CRM Frontend (React)](https://github.com/atharva5924/xeno-frontend)
+
+---
+
+## 🧩 Features
+
+- 🔐 Google OAuth2 token verification
+- 📥 Secure APIs for customer and order ingestion
+- 🧠 Segment rule parsing with AND/OR logic
+- 📬 Campaign generation & vendor simulation (~90% success)
+- 📨 Delivery receipt tracking with async logging
+- 🧵 Optional Redis/Kafka/RabbitMQ pub-sub integration
+- 🤖 AI-powered message suggestions (OpenAI)
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category     | Tech Used                          |
-|--------------|------------------------------------|
-| Language     | JavaScript (ESNext), JSX           |
-| Framework    | [React 19](https://react.dev/)     |
-| UI Library   | [Ant Design](https://ant.design/)  |
-| Styling      | [Tailwind CSS v4](https://tailwindcss.com/) |
-| State/Data   | [React Query](https://tanstack.com/query), [React Hook Form](https://react-hook-form.com/) |
-| Auth         | [Google OAuth](https://www.npmjs.com/package/@react-oauth/google) |
-| Parsing      | [PapaParse](https://www.papaparse.com/) |
-| Drag & Drop  | [react-dnd](https://react-dnd.github.io/) |
-| HTTP Client  | [Axios](https://axios-http.com/)   |
-| Routing      | [React Router DOM v7](https://reactrouter.com/) |
-| Bundler      | [Vite](https://vitejs.dev/)        |
+| Category         | Tech Used                        |
+|------------------|----------------------------------|
+| Language         | JavaScript (Node.js)             |
+| Framework        | Express.js                       |
+| Database         | MongoDB + Mongoose               |
+| Auth             | Google OAuth2                    |
+| AI Integration   | OpenAI GPT API                   |
+| Pub/Sub (optional) | Redis Streams / Kafka / RabbitMQ |
+| Dev Tools        | dotenv, axios, cors, nodemon     |
 
 ---
 
-## 🧪 AI Feature Implemented
+## 📦 API Routes
 
-### ✨ AI-Driven Message Suggestions
+### 🔐 Authentication
 
-On campaign creation, users can generate multiple variants of personalized messages based on campaign objectives like:
+| Method | Route                | Description                          |
+|--------|----------------------|--------------------------------------|
+| POST   | `/api/auth/google`   | Verifies Google OAuth token          |
 
-- 💤 "Bring back inactive users"
-- 💸 "Reward high-spending customers"
+### 📥 Data Ingestion
 
-> AI Tool Used: [OpenAI GPT API](https://platform.openai.com/)
+| Method | Route               | Description                      |
+|--------|---------------------|----------------------------------|
+| POST   | `/api/customers`    | Ingest customer data             |
+| POST   | `/api/orders`       | Ingest order data                |
 
----
+### 🧠 Segments & Campaigns
 
-## 🏗️ Frontend Architecture Overview
+| Method | Route                 | Description                                |
+|--------|-----------------------|--------------------------------------------|
+| POST   | `/api/segments`       | Create new audience segment + campaign     |
+| GET    | `/api/campaigns`      | Get all past campaigns                     |
+| GET    | `/api/campaigns/:id`  | Get campaign details by ID                 |
 
-```text
-Frontend (React.js + Tailwind + Ant Design)
-│
-├── Google OAuth Login (React Context + Token Handling)
-│   ├── Uses @react-oauth/google for authentication
-│   ├── Stores token in context and persists user session
-│   └── Restricts access to protected routes
-│
-├── Segment Builder (Rules Engine + Dynamic Form UI)
-│   ├── Users create audience segments using flexible AND/OR logic
-│   ├── UI supports nested logical conditions and validation
-│   └── Uses react-hook-form for controlled form management
-│
-├── Campaign Manager (Delivery Triggers + API Logging)
-│   ├── Triggers new campaigns via backend after segment save
-│   ├── Logs sent/failed messages into communication_log
-│   └── Handles optimistic UI feedback for delivery status
-│
-├── AI Assistant (Prompt Input → Message Suggestions)
-│   ├── Integrates with OpenAI API to generate campaign messages
-│   ├── Accepts plain text objectives and returns 2–3 variants
-│   └── Allows user to select one to proceed with
-│
-└── Campaign History Dashboard (Paginated + Stats View)
-    ├── Fetches and displays campaign logs from backend
-    ├── Shows sent, failed counts and delivery receipts
-    └── Sorted by most recent campaigns at the top
-```
+### 📬 Campaign Delivery & Logging
 
+| Method | Route               | Description                          |
+|--------|---------------------|--------------------------------------|
+| POST   | `/api/send`         | Simulate vendor sending messages     |
+| POST   | `/api/receipt`      | Vendor delivery receipt callback     |
 
-Backend, pub-sub, and AI APIs are handled via a separate Node.js service.
+### 🤖 AI Integration
+
+| Method | Route                    | Description                                 |
+|--------|--------------------------|---------------------------------------------|
+| POST   | `/api/ai/messages`       | Generate message suggestions (OpenAI)       |
+| POST   | `/api/ai/summary`        | Generate campaign performance summary       |
+
+> 🔐 All routes require authentication via Google OAuth Bearer token.
 
 ---
 
-## 🚀 Local Setup Instructions
+## 🧾 Environment Setup
 
-1. **Clone the Repo**
+1. **Clone the repo and install dependencies**
 
 ```bash
-git clone https://github.com/your-username/xeno-crm.git
-cd xeno-crm/client
-```
-
-2. **Install Dependencies**
-
-```bash
+git clone https://github.com/your-username/xeno-crm-backend.git
+cd server
 npm install
 ```
 
-3. **Configure Environment Variables**
+2. **🧾 Environment Setup**
 
-Create a .env file in the root of client:-
+### 📄 Create a `.env` file
 
-# Google OAuth Client ID for authentication
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
-# Base URL for backend API endpoints
-VITE_API_BASE_URL=http://localhost:5000
+```env
+PORT=5000
+MONGO_URI=your_mongo_uri
+GOOGLE_CLIENT_ID=your_google_client_id
+OPENAI_API_KEY=your_openai_api_key
+USE_PUBSUB=true
+REDIS_URL=redis://localhost:6379
+```
 
-
-4. **Run the Dev Server**
+3. **🚀 Run the Server**
 
 ```bash
 npm run dev
 ```
 
----
 
-## 📬 Feedback
-
-Have suggestions or found a bug?  
-Feel free to [create an issue](https://github.com/atharva5924/xeno-crm/issues) or [fork the repository](https://github.com/atharva5924/xeno-crm/fork) and submit a pull request.  
-We appreciate all forms of contributions!
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License**.  
-See the [LICENSE](./LICENSE) file for more details.
+# 📌 Known Limitations
+- OpenAI integration assumes internet availability.
+- Pub/sub is toggleable and not auto-scaled.
+- No retry mechanism on failed vendor deliveries.
+- Auth assumes valid Google token from frontend.
 
 ---
 
-> Made with ❤️ for the **Xeno SDE Internship Assignment – 2025**
+# 📄 License
+This project is licensed under the MIT License.  
+See the LICENSE file for full details.
 
+---
 
+# 🚀 Built with ❤️  
+Built for the Xeno SDE Internship Assignment – 2025
